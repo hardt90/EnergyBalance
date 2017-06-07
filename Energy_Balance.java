@@ -2,13 +2,48 @@ import java.util.ArrayList;
 
 public class Energy_Balance {
 	
+//	 Example: ......................................
+//			  .......313.(7/11).....................
+//			  .......7..............................
+//			  .......9..............................
+//			  ....(18/15)...........................
+//		      ......................................
+	
+//  First assign distinct indices (0 - (n - 1)) to all the number locations, like
+//    012 (7/11)
+//    3
+//    4
+// (18/15)
+//	
+//  Then the parameters are:
+//  original_values = {3, 1, 3, 7, 9}
+//  addends = {{0, 1, 2}, {0, 3, 4}} (These indicate which indices add to column/row sums.  Note 0 is shared in this example.)
+//  sums = {11, 15}  (Make sure the order matches the order of your entries of addends).
+//  
+//  The output is 
+//	Position 0: 3 
+//	Position 1: 1 
+//	Position 2: 7 
+//	Position 3: 3 
+//	Position 4: 9 
+//  So one solution is
+//	  317
+//	  3
+//	  9
+//
+//  For faster runtime on larger problems, it's best to put shorter rows/columns first and overlap as many entries as possible between the rows and columns as you proceed.  Square configurations should alternate row and column sums.
+	
+	
+	// given numbers to place in rows and columns
+	public static int[] original_values = {3, 1, 3, 7, 9}; 
+	
+	// sets of locations with specified sums (numbered from array with upper left 0, row first)
+	public static int[][] addends = {{0, 1, 2}, {0, 3, 4}}; 
+	
+	// desired sums for each corresponding vector in addends
+	public static int[] sums = {11, 15};			  
+	
 	public static int iterations;
-	
-	public static int[] original_values = {2, 4, -1, 0, -8, 6, 5, 2, 8, 4, 2, -6, 8, -5, 6, -6, -2, 6, 4, -7, 6, 5, -5, -4, -7}; // given numbers to place in rows and columns
-	
-	public static int[][] addends = {{0, 1, 2, 3, 4}, {5, 6, 7, 8, 9}, {10, 11, 12, 13, 14}, {15, 16, 17, 18, 19}, {20, 21, 22, 23, 24}, {0, 5, 10, 15, 20}, {1, 6, 11, 16, 21}, {2, 7, 12, 17, 22}, {3, 8, 13, 18, 23}, {4, 9, 14, 19, 24}}; // sets of locations with specified sums (numbered from array with upper left 0, row first)
-	
-	public static int[] sums = {1, 11, 21, -8, -8, 21, 3, 6, -19, 6};			  // desired sums for each corresponding vector in addends
 	
 	
 	public static boolean nextPermutation(int[] array) {
@@ -79,7 +114,7 @@ public class Energy_Balance {
 	// returns a map from the locations in addends to values (not their indices)
 	public static int[] FindMap(int[] values, int[] sums, int[][] addends){
 		iterations += 1;
-		System.out.println(iterations);
+		System.out.println("FindMap calls: " + iterations);
 //		if (iterations > 3) System.exit(0);
 //		System.out.println();
 //		System.out.println("FindMap Iteration " + iterations);
@@ -338,3 +373,4 @@ public class Energy_Balance {
 	}
 	
 }
+
