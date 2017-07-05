@@ -28,15 +28,21 @@ public class CombinationGenerator {
             int[] ind = cg.getNext();
             System.out.println("cg " + cg.id + " now " + Arrays.toString(ind));
         }
+        CombinationGenerator cg2 = new CombinationGenerator(values.length, 5);
+        while (cg2.hasMore()) {
+            int[] ind = cg2.getNext();
+            System.out.println("cg2 " + cg.id + " now " + Arrays.toString(ind));
+        }
+
 
     }
 
     public CombinationGenerator (int n, int r) {
         if (r > n) {
-            throw new IllegalArgumentException ();
+            throw new IllegalArgumentException (r + " > " + n);
         }
         if (n < 1) {
-            throw new IllegalArgumentException ();
+            throw new IllegalArgumentException (n + " < " + 1);
         }
         this.n = n;
         this.r = r;
@@ -53,6 +59,7 @@ public class CombinationGenerator {
     public void reset () {
         for (int i = 0; i < a.length; i++) {
             a[i] = i;
+            output[i] = i;
         }
         numLeft = new BigInteger (total.toString ());
     }

@@ -25,3 +25,34 @@
         4, 9, 12, 17, 20, 25    
 #  sums
 -54, -17, 33, -36, 13, 4, -40, 40, -38
+#  answer:
+#
+#  Position 0: -17
+#  Position 1: -18
+#  Position 2: -12
+#  Position 3: -4
+#  Position 4: -3
+#  Position 5: 0
+#  Position 6: 6
+#  Position 7: -23
+#  Position 8: 27
+#  Position 9: 15
+#  Position 10: -9
+#  Position 11: 25
+#  Position 12: -12
+#  Position 13: 4
+#  Position 14: -34
+#  Position 15: 10
+#  Position 16: 26
+#  Position 17: -14
+#  Position 18: -24
+#  Position 19: -2
+#  Position 20: -12
+#  Position 21: 0
+#  Position 22: 7
+#  Position 23: 6
+#  Position 24: 1
+#  Position 25: -12
+#  Position 26: 15
+#
+#

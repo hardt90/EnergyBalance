@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.io.*;
 
 class Permutation{
 
@@ -48,15 +50,117 @@ class Permutation{
     }
 }
 
+class testcase {
+
+    int[] original_values;
+    int[][] addends;
+    int[] sums;
+
+    public void printRules() {
+        for (int i = 0; i < addends.length; i++) {
+            int j = 0;;
+            for (; j < addends[i].length - 1; j++) {
+                System.out.printf("%5d +",original_values[addends[i][j]]);
+            }
+            System.out.printf("%5d =%5d\n", original_values[addends[i][j]], sums[i]);
+        }
+    }
+
+    public testcase(String filename) {
+        loadTest(filename);
+        printRules();
+    }
+
+    private List<String> readFile(String filename) {
+        List<String> records = new ArrayList<String>();
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(filename));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                records.add(line);
+            }
+            reader.close();
+            return records;
+       } catch (Exception e) {
+            System.err.format("Exception occurred trying to read '%s'.", filename);
+            e.printStackTrace();
+            return null;
+       }
+    }
+
+    public boolean loadTest(String filename) {
+        List<String> lines = readFile(filename);
+        for (int i = 0; i < lines.size(); i++) {
+            while (lines.get(i).startsWith("#")) {
+                i++; //skipping original values comments
+            }
+            String original_strings = lines.get(i);
+            System.out.println("original values: " + original_strings);
+            String[] original_strings_split = original_strings.split(",");
+
+            original_values = new int[original_strings_split.length];
+
+            for (int j = 0; j < original_values.length; j++) {
+                original_values[j] = Integer.parseInt(original_strings_split[j].trim());
+            }
+            System.out.println("original converted values: " + Arrays.toString(original_values));
+
+            i++;
+            while (lines.get(i).startsWith("#")) {
+                i++; //skipping addends comments
+            }
+
+            ArrayList<String> addends_string = new ArrayList<String>();
+            System.out.println("addends:");
+            while (!lines.get(i).startsWith("#")) {
+                addends_string.add(lines.get(i));
+                System.out.println(lines.get(i));
+                i++;
+            }
+            addends = new int[addends_string.size()][];
+            System.out.println("addends converted:");
+            for (int j = 0; j < addends_string.size(); j++) {
+                String[] addends_string_array = addends_string.get(j).split(",");
+                addends[j] = new int[addends_string_array.length];
+                for (int k = 0; k < addends[j].length; k++) {
+                    addends[j][k] = Integer.parseInt(addends_string_array[k].trim());
+                }
+                System.out.println(Arrays.toString(addends[j]));
+            }
+
+            i++;
+            while (lines.get(i).startsWith("#")) {
+                i++;  //skipping sums comments
+            }
+
+            String sum_strings = lines.get(i);
+            System.out.println("sum values: " + sum_strings);
+            String[] sum_strings_split = sum_strings.split(",");
+
+            sums = new int[sum_strings_split.length];
+
+            for (int j = 0; j < sums.length; j++) {
+                sums[j] = Integer.parseInt(sum_strings_split[j].trim());
+            }
+            System.out.println("sum converted values: " + Arrays.toString(sums));
+
+            return true;
+
+        }
+        return true;
+
+    }
+}
+
 public class Energy_Balance {
 
     /*  Example:
         ......................................
         .......313.(7/11).....................
         .......7..............................
-     		.......9..............................
-     	  ....(18/15)...........................
- 	      ......................................
+        .......9..............................
+        ....(18/15)...........................
+        ......................................
     */
 
     /*  First assign distinct indices (0 - (n - 1)) to all the number locations,
@@ -94,7 +198,7 @@ public class Energy_Balance {
     */
 
     // given numbers to place in rows and columns
-
+    public static int[] copy_original_values;
     public static int[] original_values = {
                 -17,  -18,  -12,  27,  -34,       /*=(-54/-54)*/ /*  0 -  4 */
       10,  -4,  -23, /*=(-17/-17)*/ 0,  25,   6,  /*=(31/33)*/   /*  5 - 10 */
@@ -164,19 +268,67 @@ public class Energy_Balance {
 
         iterations = 0;
         Energy_Balance eb = new Energy_Balance();
-        int[] answer = eb.FindMap(original_values, sums, addends);
 
-        for (int i = 0; i < answer.length; i++) {
-            System.out.println("Position " + i + ": " +
-                (answer[i] == EMPTY ? "ANY" : Integer.toString(answer[i]))+ " ");
+        boolean answer = false;
+
+        int[] result = null;
+        if (args != null && args.length >= 1) {
+
+            testcase mycase = new testcase(args[0]);
+            original_values = mycase.original_values;
+            result = new int[original_values.length];
+            for (int i = 0; i < result.length; i++) {
+                result[i] = EMPTY;
+            }
+            answer = eb.FindMap(mycase.original_values, mycase.sums, mycase.addends, result);
         }
-        if (answer.length == 0) {
+        else {
+            result = new int[original_values.length];
+            answer = eb.FindMap(original_values, sums, addends, result);
+        }
+        if (!answer) {
             System.out.println("No solution found!");
+            return;
+        }
+        for (int i = 0; i < result.length; i++) {
+            System.out.printf("Position %4d: %4s\n", i,
+                              (result[i] == EMPTY ? "ANY" : Integer.toString(result[i])));
+        }
+    }
+
+    private int checkARule(int[][] addends, int[] sums, int index, int[] values) {
+        int sum = 0;
+        for (int j = 0; j < addends[index].length; j++) {
+            //System.out.printf("%3d+", original_values[addends[index][j]]);
+            sum += values[addends[index][j]];
+        }
+        //System.out.printf("=%4d/%4d\n", sum, sums[index]);
+        return sum;
+    }
+
+    private boolean checkRemainingRules(int[][] addends, int[] sums, int index, int[] values) {
+        for (int i = index; i < addends.length; i++) {
+            if (sums[i] != checkARule(addends, sums, i, values)) {
+                return false;
+            }
+        }
+        return true;
+
+    }
+
+    private void printSquare(int[] values) {
+        int dim = (int)Math.sqrt(values.length);
+        for (int i = 0; i < dim; i++) {
+            for (int j = 0; j < values.length / dim; j++) {
+                System.out.printf("%4s",
+                                  (values[i * dim + j] == EMPTY ? "ANY" : values[i * dim + j]));
+            }
+            System.out.printf("\n");
         }
     }
 
     // returns a map from the locations in addends to values (not their indices)
-    public int[] FindMap(int[] values, int[] sums, int[][] addends) {
+    public boolean FindMap(int[] values, int[] sums, int[][] addends, int[] result) {
         iterations += 1;
 
         int combinationCount = 0;
@@ -203,16 +355,18 @@ public class Energy_Balance {
                         Permutation.nextPermutation(addIndices);
                     }
 
-                    // base case
+                    /* base case
+                       there could be rules(sums left) when you run out of remaining numbers
+                       the case where square puzzles work. If you found a partial solution,
+                       The values can run out with several rules remaining.
+                    */
+
+                    /* now this is really the last rule with values to accommodate */
                     if (sums.length == 1) {
-                        int[] answer = new int[original_values.length];
-                        for (int i = 0; i < answer.length; i++) {
-                            answer[i] = EMPTY;
-                        }
                         for(int i = 0; i < addends[0].length; i++) {
-                            answer[addends[0][i]] = values[addIndices[i]];
+                            result[addends[0][i]] = values[addIndices[i]];
                         }
-                        return answer;
+                        return true;
                     }
                     int[] newValues = new int[values.length - addends[0].length];
                     int temp = 0;
@@ -260,18 +414,44 @@ public class Energy_Balance {
                     if (failed) {
                         continue; // have to continue with permutations
                     }
-                    int[] answer = FindMap(newValues, newSums, newAddends);
-                    if (answer.length == 0) continue;
-                    /* XXX: backtrack */
+
+                    boolean noRulesLeft = false;
+
                     for (int i = 0; i < addends[0].length; i++) {
-                        answer[addends[0][i]] = values[addIndices[i]];
+                        result[addends[0][i]] = values[addIndices[i]];
                     }
-                    return answer;
+
+
+                    if (newValues.length == 0) {
+                        noRulesLeft = checkRemainingRules(addends, sums, 1, result);
+                        if (!noRulesLeft) {
+                            System.out.println("Remaining rules check failed");
+                            printSquare(result);//attempts saved here!
+                            for (int i = 0; i < addends[0].length; i++) {
+                                result[addends[0][i]] = EMPTY;
+                            }
+                            continue;
+                        }
+                        else { //no rules left, no values left, and additional checks pass
+                            printSquare(result);
+                            return true;
+                        }
+                    }
+
+                    /* backtrack */
+
+                    if (!FindMap(newValues, newSums, newAddends, result)) {
+                        for (int i = 0; i < addends[0].length; i++) {
+                            result[addends[0][i]] = EMPTY;
+                        }
+                        continue;
+                    }
+                    return true;
                 } // end of permutation loop
             } //end if sum == sum[0]
         } //end of all combination groups
         // no solution found, return null array
-        return new int[0];
+        return false;
     }
 }
 
