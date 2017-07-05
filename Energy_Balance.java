@@ -90,63 +90,61 @@ class testcase {
 
     public boolean loadTest(String filename) {
         List<String> lines = readFile(filename);
-        for (int i = 0; i < lines.size(); i++) {
-            while (lines.get(i).startsWith("#")) {
-                i++; //skipping original values comments
-            }
-            String original_strings = lines.get(i);
-            System.out.println("original values: " + original_strings);
-            String[] original_strings_split = original_strings.split(",");
+        int i = 0;
 
-            original_values = new int[original_strings_split.length];
-
-            for (int j = 0; j < original_values.length; j++) {
-                original_values[j] = Integer.parseInt(original_strings_split[j].trim());
-            }
-            System.out.println("original converted values: " + Arrays.toString(original_values));
-
-            i++;
-            while (lines.get(i).startsWith("#")) {
-                i++; //skipping addends comments
-            }
-
-            ArrayList<String> addends_string = new ArrayList<String>();
-            System.out.println("addends:");
-            while (!lines.get(i).startsWith("#")) {
-                addends_string.add(lines.get(i));
-                System.out.println(lines.get(i));
-                i++;
-            }
-            addends = new int[addends_string.size()][];
-            System.out.println("addends converted:");
-            for (int j = 0; j < addends_string.size(); j++) {
-                String[] addends_string_array = addends_string.get(j).split(",");
-                addends[j] = new int[addends_string_array.length];
-                for (int k = 0; k < addends[j].length; k++) {
-                    addends[j][k] = Integer.parseInt(addends_string_array[k].trim());
-                }
-                System.out.println(Arrays.toString(addends[j]));
-            }
-
-            i++;
-            while (lines.get(i).startsWith("#")) {
-                i++;  //skipping sums comments
-            }
-
-            String sum_strings = lines.get(i);
-            System.out.println("sum values: " + sum_strings);
-            String[] sum_strings_split = sum_strings.split(",");
-
-            sums = new int[sum_strings_split.length];
-
-            for (int j = 0; j < sums.length; j++) {
-                sums[j] = Integer.parseInt(sum_strings_split[j].trim());
-            }
-            System.out.println("sum converted values: " + Arrays.toString(sums));
-
-            return true;
-
+        while (lines.get(i).startsWith("#")) {
+            i++; //skipping original values comments
         }
+        String original_strings = lines.get(i);
+        System.out.println("original values: " + original_strings);
+        String[] original_strings_split = original_strings.split(",");
+
+        original_values = new int[original_strings_split.length];
+
+        for (int j = 0; j < original_values.length; j++) {
+            original_values[j] = Integer.parseInt(original_strings_split[j].trim());
+        }
+        System.out.println("original converted values: " + Arrays.toString(original_values));
+
+        i++;
+        while (lines.get(i).startsWith("#")) {
+            i++; //skipping addends comments
+        }
+
+        ArrayList<String> addends_string = new ArrayList<String>();
+        System.out.println("addends:");
+        while (!lines.get(i).startsWith("#")) {
+            addends_string.add(lines.get(i));
+            System.out.println(lines.get(i));
+            i++;
+        }
+        addends = new int[addends_string.size()][];
+        System.out.println("addends converted:");
+        for (int j = 0; j < addends_string.size(); j++) {
+            String[] addends_string_array = addends_string.get(j).split(",");
+            addends[j] = new int[addends_string_array.length];
+            for (int k = 0; k < addends[j].length; k++) {
+                addends[j][k] = Integer.parseInt(addends_string_array[k].trim());
+            }
+            System.out.println(Arrays.toString(addends[j]));
+        }
+
+        i++;
+        while (lines.get(i).startsWith("#")) {
+            i++;  //skipping sums comments
+        }
+
+        String sum_strings = lines.get(i);
+        System.out.println("sum values: " + sum_strings);
+        String[] sum_strings_split = sum_strings.split(",");
+
+        sums = new int[sum_strings_split.length];
+
+        for (int j = 0; j < sums.length; j++) {
+            sums[j] = Integer.parseInt(sum_strings_split[j].trim());
+        }
+        System.out.println("sum converted values: " + Arrays.toString(sums));
+
         return true;
 
     }
