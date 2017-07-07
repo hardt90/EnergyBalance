@@ -262,6 +262,8 @@ public class Energy_Balance {
 
     static int EMPTY = 1 << 10;
 
+    private int numFails = 0;
+
     public static void main(String[] args) {
 
         iterations = 0;
@@ -315,6 +317,7 @@ public class Energy_Balance {
     }
 
     private void printSquare(int[] values) {
+        System.out.println();
         int dim = (int)Math.sqrt(values.length);
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < values.length / dim; j++) {
@@ -322,6 +325,14 @@ public class Energy_Balance {
                                   (values[i * dim + j] == EMPTY ? "ANY" : values[i * dim + j]));
             }
             System.out.printf("\n");
+        }
+    }
+
+
+    private void printFailures() {
+        numFails++;
+        if (numFails % 10000 == 0) {
+            System.out.printf("Number of trials %s\r", String.format("%,d", numFails));
         }
     }
 
@@ -449,6 +460,7 @@ public class Energy_Balance {
             } //end if sum == sum[0]
         } //end of all combination groups
         // no solution found, return null array
+        printFailures();
         return false;
     }
 }
