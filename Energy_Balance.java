@@ -286,6 +286,7 @@ public class Energy_Balance {
             result = new int[original_values.length];
             answer = eb.FindMap(original_values, sums, addends, result);
         }
+        System.out.println();
         if (!answer) {
             System.out.println("No solution found!");
             return;
