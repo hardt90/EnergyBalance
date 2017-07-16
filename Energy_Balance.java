@@ -198,7 +198,7 @@ public class Energy_Balance {
     // given numbers to place in rows and columns
     public static int[] copy_original_values;
     public static int[] original_values = {
-                -17,  -18,  -12,  27,  -34,       /*=(-54/-54)*/ /*  0 -  4 */
+                0,  -3,  1,  13,  -2,       /*=(9/-6)*/ /*  0 -  4 */
       10,  -4,  -23, /*=(-17/-17)*/ 0,  25,   6,  /*=(31/33)*/   /*  5 - 10 */
            26, /*||*/                  -14,                      /* 11 - 12 */
           -12, /*(-40*/ 1,    4, -24,   -3, -12,  /*=(-34/-36)*/ /* 13 - 18 */
@@ -244,7 +244,7 @@ public class Energy_Balance {
     // sets of locations with specified sums
     //(numbered from array with upper left 0, row first)
     public static int[][] addends = {
-        {0, 1, 2, 3, 4},           // -54 
+        {0, 1, 2, 3, 4},           // -6
         {5, 6, 7},                 // -17
         {8, 9, 10},                //  33
         {14, 15, 16, 17, 18},      // -36
